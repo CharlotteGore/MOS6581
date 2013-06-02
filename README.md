@@ -1,6 +1,6 @@
 # MOS6581
 
-C++ library for controlling a MOS 6581/8590 via SPI on Arduino
+C++ library for controlling a MOS 6581/8590 via SPI on Arduino. Rather than requiring a MIDI in signal, this library is about putting direct and full control of the SID's 24 writeable registers into the programmer's hands in a fairly friendly API.
 
 ## Basics
 
@@ -16,6 +16,8 @@ Pin 11 is connected to the first shift register's data input pin.
 
 Pin 13 is connected to both shift register's clock input pin.
 
+The following code is about the minimum required to get a SID to make a noise - any noise. Set the volume, set an envelope, set a waveform and turn a channel on, and set a frequency. This software makes that trivial. 
+
 ```c++
 MOS6581 sid;
 
@@ -28,8 +30,117 @@ void setup(){
    sid.reset();
    sid.volume();
 
+   sid.voiceOneMode( SID_RAMP );
+   sid.voiceOneEnvelope(0,0,15,0);
+   sid.voiceOneFrequency(1600);
+
+   sid.voiceOneOn();
+
 }
 ```
+
+## Using/Compiling
+
+I've only been able to get this library to work with the Visual Studio Arduino plugin. It doesn't seem to work with the official Arduino IDE. It's possible I've just missed something simple - haven't done C++ or an Arduino library before.
+
+## API
+
+## Global Controls
+
+### .reset()
+
+Populates all the registers with 0.
+
+### .volume(byte vol)
+
+Set the global output volume. 0 - 15. 
+
+## Individual voice controls
+
+A number between 0 and 15 to set the master output volume.
+
+### .voiceOneMode( byte mode ) 
+### .voiceTwoMode( byte mode )
+### .voiceThreeMode( byte mode )
+
+Select a waveform for a voice. Options are SID_SQUARE, SID_RAMP, SID_TRIANGLE, SID_TEST, SID_RING, SID_SYNC. You can use binary maths to select multiple waveform generators but this isn't recommended.
+
+### .voiceOneFrequency(word frequency) 
+### .voiceTwoFrequency(word frequency) 
+### .voiceThreeFrequency(word frequency) 
+
+Set a frequency for a voice. Frequency is a 16bit number, 0-65535. TO DO: Lookup for real notes->frequency. 
+
+### .voiceOnePulseWidthFrequency(word frequency) 
+### .voiceTwoPulseWidthFrequency(word frequency) 
+### .voiceThreePulseWidthFrequency(word frequency) 
+
+Set a frequency for the Square wave duty cycle. No effect unless SID_SQUARE is selected as a voice's mode. Frequency is a 12 bit number, 0-4095.
+
+### .voiceOneEnvelope(byte attack, byte decay, byte sustain, byte release)
+### .voiceTwoEnvelope(byte attack, byte decay, byte sustain, byte release)
+### .voiceThreeEnvelope(byte attack, byte decay, byte sustain, byte release)
+
+Set the amplitude modulation envelope of a voice. Each parameter is a number between 0-15. 
+
+To simply play and hold a note, indefinitely, the correct setting is 0,0,15,0.
+
+### .voiceOneOn()
+### .voiceTwoOn()
+### .voiceThreeOn()
+
+Turn on a voice. 
+
+### .voiceOneOff()
+### .voiceTwoOff()
+### .voiceThreeOff()
+
+Turn off a voice
+
+### .voiceOneFilterOn()
+### .voiceTwoFilterOn()
+### .voiceThreeFilterOn()
+
+Put the voice through the filter. 
+
+### .voiceOneFilterOff()
+### .voiceTwoFilterOff()
+### .voiceThreeFilterOff()
+
+Stop a voice going through the filter.
+
+## Filter Controls
+
+### .filterLP()
+
+Engage low pass mode on the filter
+
+### .filterBP()
+
+Engage band pass mode on the filter
+
+### .filterHP()
+
+Engage high pass mode on the filter
+
+### .filterNotch()
+
+Engage high and low pass modes to make a Notch filter.
+
+### .filterFrequency(word frequency)
+
+Set the filter cutoff frequency. This is a 10 bit number, 0 - 1023
+
+### .filterResonance(byte resonance)
+
+Set the resonance amount. This is a 4 bit number, 0-15.
+
+
+## Just in Case
+
+### .transfer(byte address, byte value)
+
+Write whatever you want directly to a SID register, if you know what you're doing. Generally the API exposes everything except the read-only registers so perhaps this might be useful for that. 
 
 ## DISCLAIMER OF DOOM
 
