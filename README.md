@@ -2,6 +2,10 @@
 
 C++ library for controlling a MOS 6581/8590 via SPI on Arduino. Rather than requiring a MIDI in signal, this library is about putting direct and full control of the SID's 24 writeable registers into the programmer's hands in a fairly friendly API.
 
+I've included a [schematic of my hardware implementation](https://raw.github.com/CharlotteGore/MOS6581/master/schematic.png) that I've been using to run this code on real live SID chips in the repo. The output stage is the same as on the MIDIBox SID. The Eagle CAD files are available too, along with my cack-handed attempt at doing a single sided PCB for it. 
+
+The schematic is set up for the MOS8590, the 9v version. To run a 6581 you need more volts in, and the 9v voltage regulator needs swapping out for a 12v one. 
+
 ## Basics
 
 The Arduino is connected to 2 74HC595N shift registers. The first register (with the data in pin connected to the MOSI pin on the Arduino) is connected to pins Q0->D0, Q1->D1 ... Q7->D7 on the 6581/8590. The Q7' pin connects to the second 74HC595, which connects Q0->A0, Q1->A1 .. Q4->A4 on the 6581/8590.
