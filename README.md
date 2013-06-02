@@ -146,6 +146,16 @@ Set the resonance amount. This is a 4 bit number, 0-15.
 
 Write whatever you want directly to a SID register, if you know what you're doing. Generally the API exposes everything except the read-only registers so perhaps this might be useful for that. 
 
+## The original breadboard prototype
+
+This is my current breadboard for dev. I'll be getting this onto a proper PCB as soon as possible.
+
+![A SID MOS 6581/MOS 8590 being controlled by an Arduino Nano](https://github.com/CharlotteGore/MOS6581/raw/master/Breadboard-prototype.jpg)
+
+Admittedly a broken SID chip (still waiting on getting a fully working one!) but here's a sound sample
+
+[Sound sample](https://github.com/CharlotteGore/MOS6581/raw/master/sid-test.mp3)
+
 ## DISCLAIMER OF DOOM
 
 Copyright (c) 2013 Charlotte Gore
