@@ -2,6 +2,9 @@
 #include <SPI.h>
 #include "sid_registers.h"
 
+//#define SID_DEBUG
+
+
 void print_binary(int v, int num_places)
 {
     int mask=0, n;
@@ -67,6 +70,7 @@ void MOS6581::initialise(){
 
 #ifdef SID_DEBUG
 	Serial.begin(57600);
+
 #endif
 
 }
@@ -102,11 +106,11 @@ void MOS6581::transfer(byte address, byte value){
 	// turn on the shift register output
 	digitalWrite(ss, HIGH);
 	// wait a small amount of time for the shift register latch data in
-	delayMicroseconds(10);
+	delayMicroseconds(300);
 	// enable write mode on the SID
 	digitalWrite(cs, LOW);
 	// wait a small amount of time for the SID to pick up the data
-	delayMicroseconds(10);
+	delayMicroseconds(300);
 	// disable write mode on the SID
 	digitalWrite(cs, HIGH);
 
@@ -121,9 +125,6 @@ void MOS6581::transfer(byte address, byte value){
 	Serial.println("");
 #endif
 
-#ifdef SID_DEBUG
-	delay(1000);
-#endif
 }
 
 void MOS6581::voiceFrequency(byte lowAddress, byte highAddress, word frequency){
@@ -475,3 +476,68 @@ void MOS6581::filterNotch(){
 	transfer(SID_FL_MD_VL, mode_register);
 }
 
+void MOS6581::voiceOneOn(){
+
+#ifdef SID_DEBUG
+	Serial.println("Voice one on");
+#endif
+
+	voice1_register |= B00000001;
+	transfer(SID_V1_CT, voice1_register);
+
+}
+
+void MOS6581::voiceTwoOn(){
+
+#ifdef SID_DEBUG
+	Serial.println("Voice two on");
+#endif
+
+	voice2_register |= B00000001;
+	transfer(SID_V2_CT, voice2_register);
+
+}
+
+void MOS6581::voiceThreeOn(){
+
+#ifdef SID_DEBUG
+	Serial.println("Voice three on");
+#endif
+
+	voice3_register |= B00000001;
+	transfer(SID_V3_CT, voice3_register);
+
+}
+
+void MOS6581::voiceOneOff(){
+
+#ifdef SID_DEBUG
+	Serial.println("Voice one off");
+#endif
+
+	voice1_register &= B11111110;
+	transfer(SID_V1_CT, voice1_register);
+
+}
+
+void MOS6581::voiceTwoOff(){
+
+#ifdef SID_DEBUG
+	Serial.println("Voice two off");
+#endif
+
+	voice2_register &= B11111110;
+	transfer(SID_V2_CT, voice2_register);
+
+}
+
+void MOS6581::voiceThreeOff(){
+
+#ifdef SID_DEBUG
+	Serial.println("Voice three off");
+#endif
+
+	voice3_register &= B11111110;
+	transfer(SID_V3_CT, voice3_register);
+
+}

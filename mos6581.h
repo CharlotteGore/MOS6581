@@ -5,7 +5,7 @@
 #include <SPI.h>
 #include "sid_registers.h"
 
-#define SID_DEBUG
+// #define SID_DEBUG
 
 #define SID_NOISE 		128
 #define SID_SQUARE		64
@@ -36,7 +36,7 @@ class MOS6581
 	byte filter_register;
 	byte mode_register;
 
-	void transfer(byte address, byte value);
+	
 	void startClock(void);
 	void initialise(void);
 	void voiceFrequency(byte low, byte high, word frequency);
@@ -46,7 +46,7 @@ public:
 	MOS6581(void);
 	MOS6581(byte shiftPin, byte sidPin, byte clockPin);
 	void reset(void);
-	
+	void transfer(byte address, byte value);
 	void voiceOneOn();
 	void voiceTwoOn();
 	void voiceThreeOn();

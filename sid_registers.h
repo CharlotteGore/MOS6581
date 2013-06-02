@@ -1,6 +1,8 @@
 #ifndef SID_REG
 #define SID_REG
 
+                                           
+
 // VOICE ONE
 #define SID_V1_FL 0
 #define SID_V1_FH 1
