@@ -1,10 +1,10 @@
 # MOS6581
 
-C++ library for controlling a MOS 6581/8590 via SPI on Arduino. Rather than requiring a MIDI in signal, this library is about putting direct and full control of the SID's 24 writeable registers into the programmer's hands in a fairly friendly API.
+C++ library for controlling a MOS 6581/8580 via SPI on Arduino. Rather than requiring a MIDI in signal, this library is about putting direct and full control of the SID's 24 writeable registers into the programmer's hands in a fairly friendly API.
 
 I've included a [schematic of my hardware implementation](https://raw.github.com/CharlotteGore/MOS6581/master/schematic.png) that I've been using to run this code on real live SID chips in the repo. The output stage is the same as on the MIDIBox SID. The Eagle CAD files are available too, along with my cack-handed attempt at doing a single sided PCB for it. 
 
-The schematic is set up for the MOS8590, the 9v version. To run a 6581 you need more volts in, and the 9v voltage regulator needs swapping out for a 12v one. 
+The schematic is set up for the MOS8580 - they're a little more robust and easier to find than fully working 6581s. To run a 6581 you need more volts in, and the 9v voltage regulator needs swapping out for a 12v one. 
 
 ## Basics
 
@@ -150,7 +150,7 @@ Write whatever you want directly to a SID register, if you know what you're doin
 
 This is my current breadboard for dev. I'll be getting this onto a proper PCB as soon as possible.
 
-![A SID MOS 6581/MOS 8590 being controlled by an Arduino Nano](https://github.com/CharlotteGore/MOS6581/raw/master/Breadboard-prototype.jpg)
+![A SID MOS 6581/MOS 8580 being controlled by an Arduino Nano](https://github.com/CharlotteGore/MOS6581/raw/master/Breadboard-prototype.jpg)
 
 Admittedly a broken SID chip (still waiting on getting a fully working one!) but here's a sound sample
 
