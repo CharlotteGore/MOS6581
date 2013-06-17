@@ -24,10 +24,10 @@ void setup(){
    sid.reset();
    sid.volume(15); // set volume to the maximum, 15.
 
-   sid.setMode(0, SID_RAMP); set voice 0 to a ramp waveform
-   sid.setADEnvelope(0,0,0); Set voice 0's Attack and Decay envelope
-   sid.setSREnvelope(0,15,0); Set voice 0's Sustain and Release envelope
-   sid.setFrequency(0, 1600); Set voice 0's frequency
+   sid.setMode(0, SID_RAMP); //set voice 0 to a ramp waveform
+   sid.setADEnvelope(0,0,0); //Set voice 0's Attack and Decay envelope
+   sid.setSREnvelope(0,15,0); //Set voice 0's Sustain and Release envelope
+   sid.setFrequency(0, 1600); //Set voice 0's frequency
   
    sid.setVoice(0,1); Set voice 0 to 'on'.
 
