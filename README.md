@@ -1,24 +1,14 @@
 # MOS6581
 
-C++ library for controlling a MOS 6581/8580 via SPI on Arduino. Rather than requiring a MIDI in signal, this library is about putting direct and full control of the SID's 24 writeable registers into the programmer's hands in a fairly friendly API.
+C++(ish) library for controlling a MOS 6581/8580 via SPI on Arduino. Rather than requiring a MIDI in signal, this library is about putting direct and full control of the SID's 24 writeable registers into the programmer's hands in a fairly friendly API.
 
-I've included a [schematic of my hardware implementation](https://raw.github.com/CharlotteGore/MOS6581/master/schematic.png) that I've been using to run this code on real live SID chips in the repo. The output stage is the same as on the MIDIBox SID. The Eagle CAD files are available too, along with my cack-handed attempt at doing a single sided PCB for it. 
+There's some random schematic related junk in the repo that probably isn't much use. It's not compatible with this code (you need to reverse the bit order on the SPI interface first and reactivate the clock generator code (or supply a 1mhz clock signal from somewhere else)) and may or may not be up to date anyway. Use at your own risk.
 
-The schematic is set up for the MOS8580 - they're a little more robust and easier to find than fully working 6581s. To run a 6581 you need more volts in, and the 9v voltage regulator needs swapping out for a 12v one. 
+I've recently refactored this library to have a less fluent API but certaintly a more practical one in terms of integrating into embedded systems.
 
 ## Basics
 
-The Arduino is connected to 2 74HC595N shift registers. The first register (with the data in pin connected to the MOSI pin on the Arduino) is connected to pins Q0->D0, Q1->D1 ... Q7->D7 on the 6581/8590. The Q7' pin connects to the second 74HC595, which connects Q0->A0, Q1->A1 .. Q4->A4 on the 6581/8590.
-
-Pin 9 on the Arduino is connected to the SID Clock input pin if you're using a Nano/Uno. It's actually Timer 1, so I believe it's Pin 11 on the Mega instead, but this is untested.
-
-Pin 4 on the Arduino is connected to the SID CS (Chip Select) pin.
-
-Pin 7 on the Arduino is connected to both shift register's latch pins.
-
-Pin 11 is connected to the first shift register's data input pin.
-
-Pin 13 is connected to both shift register's clock input pin.
+This library programs the SID via the hardware SPI on an Arduino, and uses pin 2 as the SID chip select and pin 3 as the shift register latch. NOTE that the schematic isn't compatible with this iteration of the code. The code is based on the breadboard circuit I'm currently using, not the PCB which I haven't actually got in my hands yet. I will update the code once I move to the PCB. 
 
 The following code is about the minimum required to get a SID to make a noise - any noise. Set the volume, set an envelope, set a waveform and turn a channel on, and set a frequency. This software makes that trivial. 
 
@@ -32,13 +22,14 @@ void setup(){
     // sid = MOS6581(SHIFT_REG_LATCH_PIN, SID_CHIP_SELECT_PIN, SID_CLOCK_PIN)
 
    sid.reset();
-   sid.volume();
+   sid.volume(15); // set volume to the maximum, 15.
 
-   sid.voiceOneMode( SID_RAMP );
-   sid.voiceOneEnvelope(0,0,15,0);
-   sid.voiceOneFrequency(1600);
-
-   sid.voiceOneOn();
+   sid.setMode(0, SID_RAMP); set voice 0 to a ramp waveform
+   sid.setADEnvelope(0,0,0); Set voice 0's Attack and Decay envelope
+   sid.setSREnvelope(0,15,0); Set voice 0's Sustain and Release envelope
+   sid.setFrequency(0, 1600); Set voice 0's frequency
+  
+   sid.setVoice(0,1); Set voice 0 to 'on'.
 
 }
 ```
@@ -63,73 +54,38 @@ Set the global output volume. 0 - 15.
 
 A number between 0 and 15 to set the master output volume.
 
-### .voiceOneMode( byte mode ) 
-### .voiceTwoMode( byte mode )
-### .voiceThreeMode( byte mode )
+### .setMode(byte voice, byte mode)
 
 Select a waveform for a voice. Options are SID_SQUARE, SID_RAMP, SID_TRIANGLE, SID_TEST, SID_RING, SID_SYNC. You can use binary maths to select multiple waveform generators but this isn't recommended.
 
-### .voiceOneFrequency(word frequency) 
-### .voiceTwoFrequency(word frequency) 
-### .voiceThreeFrequency(word frequency) 
+### .setFrequency(byte voice, byte mode)
 
 Set a frequency for a voice. Frequency is a 16bit number, 0-65535. TO DO: Lookup for real notes->frequency. 
 
-### .voiceOnePulseWidthFrequency(word frequency) 
-### .voiceTwoPulseWidthFrequency(word frequency) 
-### .voiceThreePulseWidthFrequency(word frequency) 
+### .setPulseWidth(byte voice, word frequency)
 
 Set a frequency for the Square wave duty cycle. No effect unless SID_SQUARE is selected as a voice's mode. Frequency is a 12 bit number, 0-4095.
 
-### .voiceOneEnvelope(byte attack, byte decay, byte sustain, byte release)
-### .voiceTwoEnvelope(byte attack, byte decay, byte sustain, byte release)
-### .voiceThreeEnvelope(byte attack, byte decay, byte sustain, byte release)
+### .setADEnvelope(byte voice, byte attack, byte decay)
+### .setSREnvelope(byte voice, byte sustain, byte release)
 
-Set the amplitude modulation envelope of a voice. Each parameter is a number between 0-15. 
+Set the amplitude modulation envelope of a voice. Now split into two seperate functions. Each parameter is a number between 0-15. 
 
 To simply play and hold a note, indefinitely, the correct setting is 0,0,15,0.
 
-### .voiceOneOn()
-### .voiceTwoOn()
-### .voiceThreeOn()
+### .setVoice(byte voice, boolean on)
 
-Turn on a voice. 
+Turn a voice on or off. Without a valid frequency, waveform and envelope this might not do anythign noticable.  
 
-### .voiceOneOff()
-### .voiceTwoOff()
-### .voiceThreeOff()
+### .setFilter(byte voice, boolean on)
 
-Turn off a voice
-
-### .voiceOneFilterOn()
-### .voiceTwoFilterOn()
-### .voiceThreeFilterOn()
-
-Put the voice through the filter. 
-
-### .voiceOneFilterOff()
-### .voiceTwoFilterOff()
-### .voiceThreeFilterOff()
-
-Stop a voice going through the filter.
+Set a voice to either go or not go through the filter.
 
 ## Filter Controls
 
-### .filterLP()
+### .setFilterMode(byte mode)
 
-Engage low pass mode on the filter
-
-### .filterBP()
-
-Engage band pass mode on the filter
-
-### .filterHP()
-
-Engage high pass mode on the filter
-
-### .filterNotch()
-
-Engage high and low pass modes to make a Notch filter.
+Set the filter's mode. Valid options are SID_FILT_LP, SID_FILT_HP, SID_FILT_LP and SID_FILT_OFF (which mutes any voices going through it) you can logical OR them together, i.e, ```SID_FILT_LP | SID_FILT_HP``` to create a notch filter.  
 
 ### .filterFrequency(word frequency)
 
@@ -139,7 +95,6 @@ Set the filter cutoff frequency. This is a 10 bit number, 0 - 1023
 
 Set the resonance amount. This is a 4 bit number, 0-15.
 
-
 ## Just in Case
 
 ### .transfer(byte address, byte value)
@@ -148,12 +103,12 @@ Write whatever you want directly to a SID register, if you know what you're doin
 
 ## The original breadboard prototype
 
-This is my current breadboard for dev. I'll be getting this onto a proper PCB as soon as possible.
+This was the first breadboard I set up - just enough to control a SID with pure code and output a sound.
 
 ![A SID MOS 6581/MOS 8580 being controlled by an Arduino Nano](https://github.com/CharlotteGore/MOS6581/raw/master/Breadboard-prototype.jpg)
 
-Admittedly a broken SID chip (still waiting on getting a fully working one!) but here's a sound sample
 
+Some of the first noises I got out of a SID. This one was a complete mess. 
 [Sound sample](https://github.com/CharlotteGore/MOS6581/raw/master/sid-test.mp3)
 
 ## DISCLAIMER OF DOOM
