@@ -2,13 +2,15 @@
 
 C++(ish) library for controlling a MOS 6581/8580 via SPI on Arduino. Rather than requiring a MIDI in signal, this library is about putting direct and full control of the SID's 24 writeable registers into the programmer's hands in a fairly friendly API.
 
-There's some random schematic related junk in the repo that probably isn't much use. It's not compatible with this code (you need to reverse the bit order on the SPI interface first and reactivate the clock generator code (or supply a 1mhz clock signal from somewhere else)) and may or may not be up to date anyway. Use at your own risk.
+Also included in this repo is the schematic and board files for the PCB I've had made to interface with SID chips. It only deals with talking to the SID and getting output out without damaging it - handling MIDI-in or some other system of control is left to you. 
 
 I've recently refactored this library to have a less fluent API but certaintly a more practical one in terms of integrating into embedded systems.
 
 ## Basics
 
-This library programs the SID via the hardware SPI on an Arduino, and uses pin 2 as the SID chip select and pin 3 as the shift register latch. NOTE that the schematic isn't compatible with this iteration of the code. The code is based on the breadboard circuit I'm currently using, not the PCB which I haven't actually got in my hands yet. I will update the code once I move to the PCB. 
+This library programs the SID via the hardware SPI on an Arduino, and uses pin 2 as the SID chip select and pin 3 as the shift register latch. The library shunts data at the shift registers least significant bit first, so Q7 connects to A0, Q3 to A5, Q7 to D0 and Q0 to D7 etc. It sends the address data first, then the data so the data line from the SPI connects to the 'data' shift register, and the Q7' to the data in on the 'address' shift register. 
+
+It assumes an external 1mhz crystal oscillator instead of trying to use an internal one. There's code in the library, commented out, which will turn pin 9 on an Uno/Nano into a 1mhz clock pin. Help yourself.
 
 The following code is about the minimum required to get a SID to make a noise - any noise. Set the volume, set an envelope, set a waveform and turn a channel on, and set a frequency. This software makes that trivial. 
 
