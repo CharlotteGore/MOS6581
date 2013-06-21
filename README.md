@@ -103,15 +103,15 @@ Write whatever you want directly to a SID register, if you know what you're doin
 
 ## Project updates and things
 
-Here is my current nightmare breadboard. Still haven't got PCBs..
+Current setup: SID/Arduino Interface board with another breadboard with an Arduino Nano, MIDI in circuit, a 1mhz Oscillator and two 4051 demux chips for handling all the analog inputs on the control surface.
 
-![A SID MOS8580 being controlled by an Arduino](https://github.com/CharlotteGore/MOS6581/raw/master/breadboard-proto-2.jpg)
+![A SID Based synth](https://github.com/CharlotteGore/MOS6581/raw/master/with-pcb.jpg)
 
 Here's the ridiculous hot pink control surface I made. It doesn't quite have enough controls. I need at least 2 more toggle switches... whoops. 
 
 ![Control surface for the SID](https://github.com/CharlotteGore/MOS6581/raw/master/plexidreams.jpg)
 
-This was the first breadboard I set up - just enough to control a SID with pure code and output a sound.
+This was the first working breadboard I set up - just enough to control a SID with pure code and output a sound.
 
 ![A SID MOS 6581/MOS 8580 being controlled by an Arduino Nano](https://github.com/CharlotteGore/MOS6581/raw/master/Breadboard-prototype.jpg)
 
