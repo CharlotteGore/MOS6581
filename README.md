@@ -24,10 +24,10 @@ void setup(){
    sid.reset();
    sid.volume(15); // set volume to the maximum, 15.
 
-   sid.setMode(0, SID_RAMP); set voice 0 to a ramp waveform
-   sid.setADEnvelope(0,0,0); Set voice 0's Attack and Decay envelope
-   sid.setSREnvelope(0,15,0); Set voice 0's Sustain and Release envelope
-   sid.setFrequency(0, 1600); Set voice 0's frequency
+   sid.setMode(0, SID_RAMP); //set voice 0 to a ramp waveform
+   sid.setADEnvelope(0,0,0); //Set voice 0's Attack and Decay envelope
+   sid.setSREnvelope(0,15,0); //Set voice 0's Sustain and Release envelope
+   sid.setFrequency(0, 1600); //Set voice 0's frequency
   
    sid.setVoice(0,1); Set voice 0 to 'on'.
 
@@ -101,12 +101,22 @@ Set the resonance amount. This is a 4 bit number, 0-15.
 
 Write whatever you want directly to a SID register, if you know what you're doing. Generally the API exposes everything except the read-only registers so perhaps this might be useful for that. 
 
-## The original breadboard prototype
+## Project updates and things
+
+Here is my current nightmare breadboard. Still haven't got PCBs..
+
+![A SID MOS8580 being controlled by an Arduino](https://github.com/CharlotteGore/MOS6581/raw/master/breadboard-proto-2.jpg)
+
+Here's the ridiculous hot pink control surface I made. It doesn't quite have enough controls. I need at least 2 more toggle switches... whoops. 
+
+![Control surface for the SID](https://github.com/CharlotteGore/MOS6581/raw/master/plexidreams.jpg)
 
 This was the first breadboard I set up - just enough to control a SID with pure code and output a sound.
 
 ![A SID MOS 6581/MOS 8580 being controlled by an Arduino Nano](https://github.com/CharlotteGore/MOS6581/raw/master/Breadboard-prototype.jpg)
 
+Here's a friend playing on the SID. It demonstrates multiple voices being used, along with the filter.
+[Sound sample](https://github.com/CharlotteGore/MOS6581/raw/master/multi-voice-random.mp3)
 
 Some of the first noises I got out of a SID. This one was a complete mess. 
 [Sound sample](https://github.com/CharlotteGore/MOS6581/raw/master/sid-test.mp3)
