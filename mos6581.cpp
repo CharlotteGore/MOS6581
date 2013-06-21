@@ -35,6 +35,7 @@ void MOS6581::initialise(){
 	digitalWrite(ss, LOW);
 	                                                                                                                                                                                                                                      
 	SPI.setClockDivider(SPI_CLOCK_DIV2);
+	SPI.setBitOrder(LSBFIRST);
 	SPI.begin();
 }
 
@@ -70,6 +71,7 @@ void MOS6581::transfer(byte address, byte value){
 	digitalWrite(ss, HIGH);
 	// wait a small amount of time for the shift register latch data in
 	delayMicroseconds(2);
+	//delay(1000);
 	// enable write mode on the SID
 	digitalWrite(cs, LOW);
 	// 2 microseconds should be enough for a single clock pulse to get through
