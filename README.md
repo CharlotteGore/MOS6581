@@ -40,6 +40,8 @@ void setup(){
 
 I've only been able to get this library to work with the Visual Studio Arduino plugin. It doesn't seem to work with the official Arduino IDE. It's possible I've just missed something simple - haven't done C++ or an Arduino library before.
 
+UPDATE: It **does** work with the standard Arduino IDE. The name of the folder must match the name of the files exactly.. that solved it!
+
 ## API
 
 ## Global Controls
